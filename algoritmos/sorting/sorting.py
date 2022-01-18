@@ -24,6 +24,9 @@ def merge_sort(m):
 	left = m[:middle]
 	right = m[middle:]
 
-	return list(merge(merge_sort(left), merge_sort(right)))
+	left = merge_sort(left)
+	right = merge_sort(right)
 
-print(merge_sort([5,2,7, 3, 5 ,3]))
+	return list(merge(left, right))
+
+(merge_sort([5,2,7, 3, 5 ,3]))
