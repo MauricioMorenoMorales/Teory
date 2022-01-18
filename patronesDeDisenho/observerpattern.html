@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<div>
+		<label>Texto: </label>
+		<textarea name="" id="" cols="30" rows="10"></textarea>
+	</div>
+	<div class="container nowrap">
+		<div id="div1" class="box"></div>
+		<div id="div2" class="box"></div>
+		<div id="div3" class="box"></div>
+	</div>
+	<script>
+		class Subject {
+			constructor() {
+				this.observers = []
+			}
+			subscribe(object) {
+				this.observers.push(object)
+			}
+			unsubscribe(object) {
+				this.observers = this.observers.filter(element => element !== object)
+			}
+			notify(model){
+				this.observers.forEach(observer => {
+					observer.notify(model);
+				})
+			}
+		}
+
+		class TextSubject extends Subject {
+			constructor() {
+				super();
+				this.text = "";
+			}
+			notify(text) {
+				this.text = text;
+				super.notify(this);
+			}
+		}
+
+		class Div1Observer {
+			notify(subject){
+				document.getElementById('div1').innerHTML = subject.text
+			}
+		}
+
+		let textSubject = new TextSubject();
+		let miDiv1 = new Div1Observer();
+		text.subject.subscribe(miDiv1)
+	</script>
+</body>
+</html>
