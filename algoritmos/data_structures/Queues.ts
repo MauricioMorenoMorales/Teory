@@ -20,22 +20,22 @@ class Queue<T> implements IQueue<T> {
 
 	constructor(private capacity: number = Infinity) {}
 
-	enqueue(item: T): void {
+	public enqueue(item: T): void {
 		if (this.size() === this.capacity) {
 			throw Error('Queue has reached max capacity, you cannot add more items');
 		}
 		this.storage.push(item);
 	}
-	dequeue(): T | undefined {
+	public dequeue(): T | undefined {
 		return this.storage.shift();
 	}
-	size(): number {
+	public size(): number {
 		return this.storage.length;
 	}
-	peek(): T {
+	public peek(): T {
 		return this.storage[this.storage.length - 1];
 	}
-	getQueue() {
+	public getQueue() {
 		return this.storage;
 	}
 }
@@ -45,8 +45,36 @@ const numbers = new Queue<number>();
 //? Que se obtiene de acá?
 numbers.enqueue(3);
 numbers.enqueue(numbers.dequeue()! * 4);
-numbers.enqueue(5)
-numbers.enqueue(numbers.dequeue()! * 3)
-numbers.enqueue(503)
+numbers.enqueue(5);
+numbers.enqueue(numbers.dequeue()! * 3);
+numbers.enqueue(503);
 
 console.log(numbers.getQueue());
+
+interface IPointerQueue<T> {
+	enqueue(data: T): void;
+	dequeue(): any;
+	peek(): any;
+}
+
+class PointerQueue<T> implements IPointerQueue<T> {
+	private head: number;
+	private tail: number;
+	private queue: Array<T> = [];
+	constructor(size: number) {
+		this.head = this.tail = -1;
+		this.queue = new Array(size);
+	}
+
+	public enqueue(data: T): void {
+		if (this.isFull()) throw Error('The Queue is full');
+		if (this.isEmpty()) this.head++;
+		this.queue[this.tail++] = data;
+	}
+	private isEmpty(): boolean {
+		return this.head === -1;
+	}
+	private isFull(): boolean {
+		return this.tail === this.queue.length - 1;
+	}
+}
