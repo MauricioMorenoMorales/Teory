@@ -37,7 +37,7 @@ export class Node<T> {
 interface ILinkedList<T> {
 	insertInBegin(data: T): Node<T>;
 	insertAtEnd(data: T): Node<T>;
-	deleteNode(node: Node<T>);
+	deleteNode(node: Node<T>): void;
 	traverse(): T[];
 	size(): number;
 	search(comparator: (data: T) => boolean): Node<T> | null;
@@ -45,7 +45,6 @@ interface ILinkedList<T> {
 
 export class LinkedList<T> implements ILinkedList<T> {
 	private head: Node<T> | null = null;
-
 	public insertInBegin(data: T): Node<T> {
 		const node = new Node(data);
 		if (!this.head) {
@@ -70,7 +69,8 @@ export class LinkedList<T> implements ILinkedList<T> {
 		}
 		return node;
 	}
-	public deleteNode(node: Node<T>) {
+	public deleteNode(node: Node<T> | null): void {
+		if (!node) return;
 		if (!node.prev) {
 			this.head = node.next;
 		} else {
@@ -92,11 +92,44 @@ export class LinkedList<T> implements ILinkedList<T> {
 	public size(): number {
 		return this.traverse().length;
 	}
-	public search(comparator: (data: T) => boolean): Node<T> {
+	public search(comparator: (data: T) => boolean): Node<T> | null {
 		const checkNext = (node: Node<T>): Node<T> | null => {
 			if (comparator(node.data)) return node;
 			return node.next ? checkNext(node.next) : null;
 		};
 		return this.head ? checkNext(this.head) : null;
 	}
+	public insertAfter(comparator: (data: T) => boolean, data: T): Node<T> {
+		const findedElement = this.search(comparator);
+		if (!findedElement) {
+			return this.insertInBegin(data);
+		}
+		const newNode = new Node(data);
+		newNode.prev = findedElement;
+		newNode.next = findedElement.next;
+		findedElement.next = newNode;
+		return newNode;
+	}
+	public insertBefore(comparator: (data: T) => boolean, data: T): Node<T> {
+		const findedElement = this.search(comparator);
+		if (!findedElement) {
+			return this.insertInBegin(data);
+		}
+		const newNode = new Node(data);
+		newNode.next = findedElement;
+		newNode.prev = findedElement.prev;
+		findedElement.prev = newNode;
+		return newNode;
+	}
 }
+
+const linked = new LinkedList<number>();
+
+linked.insertInBegin(1);
+linked.insertInBegin(2);
+linked.insertInBegin(3);
+linked.insertInBegin(4);
+linked.insertInBegin(5);
+
+console.log(linked.insertBefore(element => element == 3, 888));
+console.log(linked.traverse());
