@@ -8,7 +8,7 @@ peek() |> muestra la cabeza de la queue sin cambiar el queue
 */
 
 interface IQueue<T> {
-	enqueue(item: T): void;
+	enqueue: (item: T) => void;
 	dequeue(): T | undefined;
 	size(): number;
 	peek(): T;
@@ -51,16 +51,17 @@ numbers.enqueue(503);
 
 console.log(numbers.getQueue());
 
-interface IPointerQueue<T> {
+export interface IPointerQueue<T> {
 	enqueue(data: T): void;
-	dequeue(): any;
-	peek(): any;
+	dequeue(): T;
+	peek(): T;
 }
 
-class PointerQueue<T> implements IPointerQueue<T> {
+export class PointerQueue<T> implements IPointerQueue<T> {
 	private head: number;
 	private tail: number;
 	private queue: Array<T> = [];
+
 	constructor(size: number) {
 		this.head = this.tail = -1;
 		this.queue = new Array(size);
@@ -71,6 +72,20 @@ class PointerQueue<T> implements IPointerQueue<T> {
 		if (this.isEmpty()) this.head++;
 		this.queue[this.tail++] = data;
 	}
+
+	public dequeue(): T {
+		if (this.isEmpty()) throw Error('The queue is empty');
+		const temp: T = this.queue[this.head];
+		if (this.head === this.tail) this.head = this.tail = -1;
+		else this.head++;
+		return temp;
+	}
+
+	public peek(): T {
+		if (this.isEmpty()) throw Error('The queue is empty');
+		return this.queue[this.head];
+	}
+
 	private isEmpty(): boolean {
 		return this.head === -1;
 	}
