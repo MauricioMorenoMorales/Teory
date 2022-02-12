@@ -116,9 +116,6 @@ export class LinkedList<T> implements ILinkedList<T> {
 			return this.insertInBegin(data);
 		}
 		const newNode = new Node(data);
-		newNode.next = findedElement;
-		newNode.prev = findedElement.prev;
-		findedElement.prev = newNode;
 		return newNode;
 	}
 }
