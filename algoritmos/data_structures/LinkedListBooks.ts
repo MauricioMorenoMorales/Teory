@@ -43,8 +43,10 @@ interface ILinkedList<T> {
 	search(comparator: (data: T) => boolean): Node<T> | null;
 }
 
+// next -> siguiente tail, prev -> head anterior
 export class LinkedList<T> implements ILinkedList<T> {
 	private head: Node<T> | null = null;
+
 	public insertInBegin(data: T): Node<T> {
 		const node = new Node(data);
 		if (!this.head) {
@@ -56,6 +58,7 @@ export class LinkedList<T> implements ILinkedList<T> {
 		}
 		return node;
 	}
+
 	public insertAtEnd(data: T): Node<T> {
 		const node = new Node(data);
 		if (!this.head) {
@@ -69,6 +72,7 @@ export class LinkedList<T> implements ILinkedList<T> {
 		}
 		return node;
 	}
+
 	public deleteNode(node: Node<T> | null): void {
 		if (!node) return;
 		if (!node.prev) {
@@ -78,20 +82,21 @@ export class LinkedList<T> implements ILinkedList<T> {
 			prevNode.next = node.next;
 		}
 	}
+
 	public traverse(): T[] {
 		const array: T[] = [];
-		if (!this.head) {
-			return array;
-		}
+		if (!this.head) return array;
 		const addToArray = (node: Node<T>): T[] => {
 			array.push(node.data);
 			return node.next ? addToArray(node.next) : array;
 		};
 		return addToArray(this.head);
 	}
+
 	public size(): number {
 		return this.traverse().length;
 	}
+
 	public search(comparator: (data: T) => boolean): Node<T> | null {
 		const checkNext = (node: Node<T>): Node<T> | null => {
 			if (comparator(node.data)) return node;
@@ -99,34 +104,35 @@ export class LinkedList<T> implements ILinkedList<T> {
 		};
 		return this.head ? checkNext(this.head) : null;
 	}
+
 	public insertAfter(comparator: (data: T) => boolean, data: T): Node<T> {
 		const findedElement = this.search(comparator);
-		if (!findedElement) {
-			return this.insertInBegin(data);
-		}
+		if (!findedElement) return this.insertInBegin(data);
 		const newNode = new Node(data);
 		newNode.prev = findedElement;
 		newNode.next = findedElement.next;
 		findedElement.next = newNode;
 		return newNode;
 	}
+
 	public insertBefore(comparator: (data: T) => boolean, data: T): Node<T> {
 		const findedElement = this.search(comparator);
-		if (!findedElement) {
-			return this.insertInBegin(data);
-		}
+		if (!findedElement) return this.insertInBegin(data);
+		if (!findedElement.prev) return this.insertInBegin(data);
 		const newNode = new Node(data);
+		findedElement.prev.next = newNode;
+		newNode.prev = findedElement.prev;
+		newNode.next = findedElement;
+		findedElement.prev = newNode;
 		return newNode;
 	}
 }
 
-const linked = new LinkedList<number>();
+const linked = new LinkedList<Libro>();
 
-linked.insertInBegin(1);
-linked.insertInBegin(2);
-linked.insertInBegin(3);
-linked.insertInBegin(4);
-linked.insertInBegin(5);
-
-console.log(linked.insertBefore(element => element == 3, 888));
+linked.insertInBegin(new Libro('materialism', 'gustavo bueno', '1234oksmdf'));
+linked.insertInBegin(
+	new Libro('javascript', 'Zwasdislav Bekszinski', '1234oksmdf'),
+);
+linked.insertInBegin(new Libro('Rust', 'Linus torvalds', '1234oksmdf'));
 console.log(linked.traverse());
