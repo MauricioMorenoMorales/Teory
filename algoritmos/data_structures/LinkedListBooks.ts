@@ -41,6 +41,8 @@ interface ILinkedList<T> {
 	traverse(): T[];
 	size(): number;
 	search(comparator: (data: T) => boolean): Node<T> | null;
+	insertBefore(comparator: (data: T) => boolean, data: T): Node<T>
+	insertAfter(comparator: (data: T) => boolean, data: T): Node<T>
 }
 
 // next -> siguiente tail, prev -> head anterior
@@ -131,8 +133,6 @@ export class LinkedList<T> implements ILinkedList<T> {
 const linked = new LinkedList<Libro>();
 
 linked.insertInBegin(new Libro('materialism', 'gustavo bueno', '1234oksmdf'));
-linked.insertInBegin(
-	new Libro('javascript', 'Zwasdislav Bekszinski', '1234oksmdf'),
-);
+linked.insertInBegin(new Libro('javascript', 'Zwasdislav', '1234oksmdf'));
 linked.insertInBegin(new Libro('Rust', 'Linus torvalds', '1234oksmdf'));
 console.log(linked.traverse());

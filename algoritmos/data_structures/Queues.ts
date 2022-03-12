@@ -49,8 +49,6 @@ numbers.enqueue(5);
 numbers.enqueue(numbers.dequeue()! * 3);
 numbers.enqueue(503);
 
-console.log(numbers.getQueue());
-
 export interface IPointerQueue<T> {
 	enqueue(data: T): void;
 	dequeue(): T;
@@ -83,7 +81,7 @@ export class PointerQueue<T> implements IPointerQueue<T> {
 
 	public peek(): T {
 		if (this.isEmpty()) throw Error('The queue is empty');
-		return this.queue[this.head];
+		return this.queue[this.head - 1];
 	}
 
 	private isEmpty(): boolean {
@@ -93,3 +91,12 @@ export class PointerQueue<T> implements IPointerQueue<T> {
 		return this.tail === this.queue.length - 1;
 	}
 }
+
+const queue = new PointerQueue<number>(10);
+
+queue.enqueue(1);
+queue.enqueue(2);
+queue.enqueue(3);
+queue.enqueue(4);
+
+console.log(queue.peek());
